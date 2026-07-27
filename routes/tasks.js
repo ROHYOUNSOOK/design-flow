@@ -92,14 +92,14 @@ router.delete('/:id', requireRole('관리자'), async (req, res) => {
   }
 });
 
-// 업무 시작 (팀원 - 본인 업무만)
-router.patch('/:id/start', requireRole('팀원'), async (req, res) => {
+// 업무 시작 (관리자 또는 팀원 - 본인 업무만)
+router.patch('/:id/start', requireRole('관리자', '팀원'), async (req, res) => {
   try {
     const task = await store.getTaskById(req.params.id);
     if (!task) {
       return res.status(404).json({ error: '업무를 찾을 수 없습니다.' });
     }
-    if (task.assigneeId !== req.user.id) {
+    if (req.user.role !== '관리자' && task.assigneeId !== req.user.id) {
       return res.status(403).json({ error: '본인의 업무만 시작할 수 있습니다.' });
     }
     if (task.status !== '대기') {
@@ -117,14 +117,14 @@ router.patch('/:id/start', requireRole('팀원'), async (req, res) => {
   }
 });
 
-// 업무 완료 (팀원 - 본인 업무만) → 팀장/부팀장에게 알림
-router.patch('/:id/complete', requireRole('팀원'), async (req, res) => {
+// 업무 완료 (관리자 또는 팀원 - 본인 업무만) → 팀장/부팀장에게 알림
+router.patch('/:id/complete', requireRole('관리자', '팀원'), async (req, res) => {
   try {
     const task = await store.getTaskById(req.params.id);
     if (!task) {
       return res.status(404).json({ error: '업무를 찾을 수 없습니다.' });
     }
-    if (task.assigneeId !== req.user.id) {
+    if (req.user.role !== '관리자' && task.assigneeId !== req.user.id) {
       return res.status(403).json({ error: '본인의 업무만 완료할 수 있습니다.' });
     }
     if (task.status !== '진행중') {
@@ -154,14 +154,14 @@ router.patch('/:id/complete', requireRole('팀원'), async (req, res) => {
   }
 });
 
-// 진행도 업데이트 (팀원 - 본인 업무만)
-router.patch('/:id/progress', requireRole('팀원'), async (req, res) => {
+// 진행도 업데이트 (관리자 또는 팀원 - 본인 업무만)
+router.patch('/:id/progress', requireRole('관리자', '팀원'), async (req, res) => {
   try {
     const task = await store.getTaskById(req.params.id);
     if (!task) {
       return res.status(404).json({ error: '업무를 찾을 수 없습니다.' });
     }
-    if (task.assigneeId !== req.user.id) {
+    if (req.user.role !== '관리자' && task.assigneeId !== req.user.id) {
       return res.status(403).json({ error: '본인의 업무만 수정할 수 있습니다.' });
     }
 
