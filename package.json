@@ -1,0 +1,16 @@
+{
+  "name": "designer-task-board",
+  "version": "1.0.0",
+  "description": "디자이너 업무 플로어 - 칸반 보드",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디자이너 업무 플로어</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/board.css">
+  <link rel="stylesheet" href="/css/modal.css">
+  <link rel="stylesheet" href="/css/notification.css">
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <h1>업무 플로어</h1>
+    </div>
+    <div class="header-right">
+      <button class="notification-bell" id="bellBtn">
+        🔔
+        <span class="notification-badge hidden" id="notifBadge">0</span>
+      </button>
+      <div class="header-user">
+        <div class="user-avatar" id="headerAvatar" style="width:32px;height:32px;font-size:13px;"></div>
+        <span id="headerName"></span>
+        <span class="role-badge" id="headerRole"></span>
+      </div>
+      <button class="btn-logout" id="logoutBtn">로그아웃</button>
+    </div>
+  </header>
+
+  <!-- 알림 드롭다운 -->
+  <div class="notification-dropdown" id="notifDropdown">
+    <div class="notification-dropdown-header">
+      <h3>알림</h3>
+      <button class="btn-read-all" id="readAllBtn">모두 읽음</button>
+    </div>
+    <div class="notification-list" id="notifList"></div>
+  </div>
+
+  <!-- 메인 -->
+  <main class="main">
+    <div class="board-header">
+      <h2>업무 보드</h2>
+      <button class="btn-add-task" id="addTaskBtn" style="display:none;">+ 새 업무</button>
+    </div>
+
+    <div class="board" id="board">
+      <div class="column" data-status="대기">
+        <div class="column-header">
+          <span class="column-title"><span class="column-dot"></span>대기</span>
+          <span class="column-count" id="count-대기">0</span>
+        </div>
+        <div class="card-list" data-status="대기"></div>
+      </div>
+      <div class="column" data-status="진행중">
+        <div class="column-header">
+          <span class="column-title"><span class="column-dot"></span>진행중</span>
+          <span class="column-count" id="count-진행중">0</span>
+        </div>
+        <div class="card-list" data-status="진행중"></div>
+      </div>
+      <div class="column" data-status="완료">
+        <div class="column-header">
+          <span class="column-title"><span class="column-dot"></span>완료</span>
+          <span class="column-count" id="count-완료">0</span>
+        </div>
+        <div class="card-list" data-status="완료"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 업무 생성/수정 모달 -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">새 업무 만들기</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="taskId">
+        <div class="form-group">
+          <label>업무 제목</label>
+          <input type="text" id="taskTitleInput" placeholder="업무 제목을 입력하세요">
+        </div>
+        <div class="form-group">
+          <label>업무 내용</label>
+          <textarea id="taskDescInput" placeholder="업무 내용을 입력하세요"></textarea>
+        </div>
+        <div class="form-group">
+          <label>담당자</label>
+          <select id="taskAssigneeInput">
+            <option value="">미배정</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>우선도</label>
+          <div class="priority-options">
+            <button class="priority-option" data-value="high">높음</button>
+            <button class="priority-option selected" data-value="mid">보통</button>
+            <button class="priority-option" data-value="low">낮음</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>마감일</label>
+          <input type="date" id="taskDueInput">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" id="modalCancelBtn">취소</button>
+        <button class="btn-modal btn-submit" id="modalSubmitBtn">생성</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/card.js"></script>
+  <script src="/js/board.js"></script>
+  <script src="/js/dragdrop.js"></script>
+  <script src="/js/modal.js"></script>
+  <script src="/js/notification.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
