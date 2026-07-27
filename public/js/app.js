@@ -17,9 +17,10 @@ window.currentUser = null;
   document.getElementById('headerName').textContent = user.name;
   document.getElementById('headerRole').textContent = user.role;
 
-  // 관리자: 새 업무 버튼 표시
+  // 관리자: 새 업무 + 팀원 관리 버튼 표시
   if (user.role === '관리자') {
     document.getElementById('addTaskBtn').style.display = '';
+    document.getElementById('manageUsersBtn').style.display = '';
   }
 
   // 로그아웃

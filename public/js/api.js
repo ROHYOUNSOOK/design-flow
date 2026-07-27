@@ -19,6 +19,9 @@ const API = {
 
   // Users
   getUsers() { return this.request('GET', '/users'); },
+  createUser(data) { return this.request('POST', '/users', data); },
+  updateUser(id, data) { return this.request('PUT', '/users/' + id, data); },
+  deleteUser(id) { return this.request('DELETE', '/users/' + id); },
 
   // Tasks
   getTasks() { return this.request('GET', '/tasks'); },
