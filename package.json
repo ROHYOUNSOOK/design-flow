@@ -8,9 +8,12 @@
     "seed": "node seed.js"
   },
   "dependencies": {
-    "@vercel/postgres": "^0.10.0",
+    "@neondatabase/serverless": "^1.1.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2"
   }
 }
