@@ -50,6 +50,8 @@
   padding: 0;
   min-height: 300px;
   transition: background 0.15s;
+  display: flex;
+  flex-direction: column;
 }
 
 .column:last-child {
@@ -107,6 +109,7 @@
   gap: 6px;
   padding: 0 6px 6px;
   min-height: 80px;
+  flex: 1;
 }
 
 /* 카드 스타일 */
@@ -336,9 +339,9 @@
 
 .btn-show-more {
   width: calc(100% - 12px);
-  margin: 0 6px;
+  margin: 6px 6px 8px;
   padding: 8px;
-  background: var(--surface);
+  background: rgba(55, 53, 47, 0.04);
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-sm);
   font-size: 12px;
@@ -346,10 +349,7 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: background 0.1s;
-  position: sticky;
-  bottom: 8px;
-  z-index: 5;
-  box-shadow: 0 -4px 8px rgba(255,255,255,0.8);
+  margin-top: auto;
 }
 
 .btn-show-more:hover {
