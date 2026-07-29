@@ -36,8 +36,12 @@ window.currentUser = null;
     location.href = '/';
   });
 
-  // 보드 로드
-  await loadBoard();
+  // 보드 로드 (현재 월 기준 조회)
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  window.currentFilter = { year, month };
+  await loadFilteredBoard(year, month);
 
   // 알림 폴링 시작 (팀장, 부팀장만)
   if (user.role === '파트장' || user.role === '부팀장') {
