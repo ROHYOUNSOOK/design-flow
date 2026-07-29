@@ -4,7 +4,7 @@ const store = require('../lib/store');
 const sheets = require('../lib/sheets');
 const { requireRole, requireLogin } = require('../middleware/auth');
 
-// 시트 → 보드 동기화 (Pull) - part(국내/해외) + year/month 필터
+// 시트 → 보드 동기화 (Pull) - 증분 동기화 지원
 router.post('/pull', requireRole('관리자'), async (req, res) => {
   try {
     const { year, month, part } = req.body;
@@ -25,6 +25,13 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
         const d = new Date(t.requestDate);
         return d.getFullYear() === y && (d.getMonth() + 1) === m;
       });
+    }
+
+    // 증분 동기화: 첫 동기화면 전체, 이후엔 마지막 행 기준 위로 400행만
+    const maxSheetRow = await store.getMaxSheetRow(part);
+    if (maxSheetRow !== null) {
+      const cutoff = maxSheetRow - 400;
+      sheetTasks = sheetTasks.filter(t => t.sheetRow > cutoff);
     }
 
     let created = 0;
@@ -75,9 +82,10 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
     }
 
     const partLabel = part === '국내' ? '국내파트' : '해외파트';
+    const syncType = maxSheetRow !== null ? '증분' : '전체';
     res.json({
       ok: true,
-      message: `${partLabel} 동기화 완료: ${created}개 생성, ${updated}개 업데이트`,
+      message: `${partLabel} ${syncType} 동기화 완료: ${created}개 생성, ${updated}개 업데이트`,
       created,
       updated,
     });

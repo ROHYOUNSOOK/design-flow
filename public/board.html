@@ -60,27 +60,7 @@
     </div>
 
     <div class="board" id="board">
-      <div class="column" data-status="대기">
-        <div class="column-header">
-          <span class="column-title"><span class="column-dot"></span>대기</span>
-          <span class="column-count" id="count-대기">0</span>
-        </div>
-        <div class="card-list" data-status="대기"></div>
-      </div>
-      <div class="column" data-status="진행중">
-        <div class="column-header">
-          <span class="column-title"><span class="column-dot"></span>진행중</span>
-          <span class="column-count" id="count-진행중">0</span>
-        </div>
-        <div class="card-list" data-status="진행중"></div>
-      </div>
-      <div class="column" data-status="완료">
-        <div class="column-header">
-          <span class="column-title"><span class="column-dot"></span>완료</span>
-          <span class="column-count" id="count-완료">0</span>
-        </div>
-        <div class="card-list" data-status="완료"></div>
-      </div>
+      <!-- JS로 동적 생성 -->
     </div>
   </main>
 
@@ -93,6 +73,13 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="taskId">
+        <div class="form-group">
+          <label>파트</label>
+          <select id="taskPartInput">
+            <option value="국내">국내파트</option>
+            <option value="해외">해외파트</option>
+          </select>
+        </div>
         <div class="form-group">
           <label>업무 제목</label>
           <input type="text" id="taskTitleInput" placeholder="업무 제목을 입력하세요">

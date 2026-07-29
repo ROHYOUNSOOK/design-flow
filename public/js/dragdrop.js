@@ -7,18 +7,21 @@ function initDragDrop() {
       card.classList.add('dragging');
       e.dataTransfer.setData('text/plain', card.dataset.id);
       e.dataTransfer.effectAllowed = 'move';
+      window._draggingPart = card.closest('.column').dataset.part;
     });
 
     card.addEventListener('dragend', () => {
       card.classList.remove('dragging');
       columns.forEach(col => col.classList.remove('drag-over'));
+      window._draggingPart = null;
     });
   });
 
   columns.forEach(col => {
-    const list = col.querySelector('.card-list');
-
     col.addEventListener('dragover', (e) => {
+      if (window._draggingPart && col.dataset.part !== window._draggingPart) {
+        return;
+      }
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       col.classList.add('drag-over');

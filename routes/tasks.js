@@ -17,7 +17,7 @@ router.get('/', requireLogin, async (req, res) => {
 // 업무 생성 (관리자만)
 router.post('/', requireRole('관리자'), async (req, res) => {
   try {
-    const { title, description, assigneeId, priority, dueDate } = req.body;
+    const { title, description, assigneeId, priority, dueDate, part } = req.body;
     if (!title) {
       return res.status(400).json({ error: '제목은 필수입니다.' });
     }
@@ -36,6 +36,7 @@ router.post('/', requireRole('관리자'), async (req, res) => {
       priority,
       dueDate,
       createdBy: req.user.id,
+      part: part || '국내',
     });
 
     res.status(201).json(task);
@@ -53,11 +54,12 @@ router.put('/:id', requireRole('관리자'), async (req, res) => {
       return res.status(404).json({ error: '업무를 찾을 수 없습니다.' });
     }
 
-    const { title, description, assigneeId, priority, dueDate } = req.body;
+    const { title, description, assigneeId, priority, dueDate, part } = req.body;
     const fields = {};
 
     if (title !== undefined) fields.title = title;
     if (description !== undefined) fields.description = description;
+    if (part !== undefined) fields.part = part;
     if (assigneeId !== undefined) {
       fields.assigneeId = assigneeId;
       if (assigneeId) {

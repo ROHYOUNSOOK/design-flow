@@ -5,6 +5,7 @@ const titleInput = document.getElementById('taskTitleInput');
 const descInput = document.getElementById('taskDescInput');
 const assigneeInput = document.getElementById('taskAssigneeInput');
 const dueInput = document.getElementById('taskDueInput');
+const partInput = document.getElementById('taskPartInput');
 const submitBtn = document.getElementById('modalSubmitBtn');
 
 let selectedPriority = 'mid';
@@ -33,6 +34,7 @@ function resetForm() {
   descInput.value = '';
   assigneeInput.value = '';
   dueInput.value = '';
+  partInput.value = '국내';
   selectedPriority = 'mid';
   document.querySelectorAll('.priority-option').forEach(b => {
     b.classList.toggle('selected', b.dataset.value === 'mid');
@@ -67,6 +69,7 @@ window.openEditModal = function(taskId) {
   descInput.value = task.description;
   assigneeInput.value = task.assigneeId || '';
   dueInput.value = task.dueDate || '';
+  partInput.value = task.part || '국내';
   selectedPriority = task.priority;
 
   document.querySelectorAll('.priority-option').forEach(b => {
@@ -98,7 +101,8 @@ submitBtn.addEventListener('click', async () => {
     description: descInput.value.trim(),
     assigneeId: assigneeInput.value || null,
     priority: selectedPriority,
-    dueDate: dueInput.value || null
+    dueDate: dueInput.value || null,
+    part: partInput.value,
   };
 
   try {
