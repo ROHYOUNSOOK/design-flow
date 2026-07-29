@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUserByEmail, createUser } = require('../lib/store');
+const { getUserByEmail, createUser, updateUser } = require('../lib/store');
 const { createToken, setTokenCookie, clearTokenCookie, getUserFromRequest } = require('../lib/auth');
 
 const ALLOWED_DOMAIN = 'daplan.com';
@@ -35,6 +35,8 @@ router.post('/login', async (req, res) => {
         avatar: randomAvatar(),
         email: email.toLowerCase(),
       });
+    } else if (email.toLowerCase() === ADMIN_EMAIL && user.role !== '관리자') {
+      user = await updateUser(user.id, { role: '관리자' });
     }
 
     const token = createToken(user);
