@@ -328,3 +328,26 @@
   background: rgba(55, 53, 47, 0.08);
   color: var(--text);
 }
+
+/* 더보기 */
+.card-hidden {
+  display: none;
+}
+
+.btn-show-more {
+  width: 100%;
+  padding: 8px;
+  background: rgba(55, 53, 47, 0.04);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btn-show-more:hover {
+  background: rgba(55, 53, 47, 0.08);
+  color: var(--text);
+}

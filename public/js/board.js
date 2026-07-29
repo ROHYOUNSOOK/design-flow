@@ -58,9 +58,23 @@ function renderBoard(tasks, users) {
       cardList.dataset.status = status;
       cardList.dataset.part = part;
 
-      filtered.forEach(task => {
-        cardList.appendChild(createCardElement(task, currentUser, users));
+      const INITIAL_SHOW = 5;
+      filtered.forEach((task, idx) => {
+        const card = createCardElement(task, currentUser, users);
+        if (idx >= INITIAL_SHOW) card.classList.add('card-hidden');
+        cardList.appendChild(card);
       });
+
+      if (filtered.length > INITIAL_SHOW) {
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'btn-show-more';
+        moreBtn.textContent = `더보기 (${filtered.length - INITIAL_SHOW}건)`;
+        moreBtn.addEventListener('click', () => {
+          cardList.querySelectorAll('.card-hidden').forEach(c => c.classList.remove('card-hidden'));
+          moreBtn.remove();
+        });
+        cardList.appendChild(moreBtn);
+      }
 
       col.appendChild(cardList);
       columnsWrap.appendChild(col);
