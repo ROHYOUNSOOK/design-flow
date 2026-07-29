@@ -45,6 +45,19 @@ async function migrate() {
   `;
   console.log('  users.email: OK');
 
+  await sql`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'tasks' AND column_name = 'part'
+      ) THEN
+        ALTER TABLE tasks ADD COLUMN part VARCHAR(10);
+      END IF;
+    END $$
+  `;
+  console.log('  tasks.part: OK');
+
   console.log('Migration complete!');
 }
 

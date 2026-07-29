@@ -29,7 +29,8 @@ async function seed() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       created_by VARCHAR(20) REFERENCES users(id),
       sheet_row INTEGER,
-      request_date DATE
+      request_date DATE,
+      part VARCHAR(10)
     )
   `;
 

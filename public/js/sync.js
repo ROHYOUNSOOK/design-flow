@@ -1,12 +1,17 @@
 // 시트 동기화 API
 const SyncAPI = {
-  pull(year, month) { return API.request('POST', '/sync/pull', { year, month }); },
-  push(year, month) { return API.request('POST', '/sync/push', { year, month }); },
+  pull(year, month, part) { return API.request('POST', '/sync/pull', { year, month, part }); },
+  push(year, month, part) { return API.request('POST', '/sync/push', { year, month, part }); },
   getMonthlyTasks(year, month) { return API.request('GET', '/sync/tasks?year=' + year + '&month=' + month); },
 };
 
 // 현재 필터 상태
 window.currentFilter = { year: null, month: null };
+
+function getSelectedPart() {
+  const el = document.getElementById('partSelect');
+  return el ? el.value : '국내';
+}
 
 function initFilter() {
   const yearSelect = document.getElementById('filterYear');
@@ -16,7 +21,6 @@ function initFilter() {
 
   if (!yearSelect || !monthSelect) return;
 
-  // 년도 옵션 (현재 년도 기준 +-2년)
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
@@ -29,7 +33,6 @@ function initFilter() {
     yearSelect.appendChild(opt);
   }
 
-  // 월 옵션
   for (let m = 1; m <= 12; m++) {
     const opt = document.createElement('option');
     opt.value = m;
@@ -38,7 +41,6 @@ function initFilter() {
     monthSelect.appendChild(opt);
   }
 
-  // 조회 버튼
   filterBtn.addEventListener('click', async () => {
     const year = parseInt(yearSelect.value);
     const month = parseInt(monthSelect.value);
@@ -46,7 +48,6 @@ function initFilter() {
     await loadFilteredBoard(year, month);
   });
 
-  // 전체 보기
   resetBtn.addEventListener('click', async () => {
     window.currentFilter = { year: null, month: null };
     await loadBoard();
@@ -86,12 +87,14 @@ function initSync() {
   pullBtn.addEventListener('click', async () => {
     if (pullBtn.disabled) return;
     const { year, month } = getSelectedFilter();
+    const part = getSelectedPart();
+    const partLabel = part === '국내' ? '국내파트' : '해외파트';
+
     pullBtn.disabled = true;
     pullBtn.textContent = '동기화 중...';
     try {
-      const result = await SyncAPI.pull(year, month);
+      const result = await SyncAPI.pull(year, month, part);
       alert(result.message);
-      // 동기화 후 해당 월로 필터 조회
       if (year && month) {
         window.currentFilter = { year, month };
         await loadFilteredBoard(year, month);
@@ -109,14 +112,18 @@ function initSync() {
   pushBtn.addEventListener('click', async () => {
     if (pushBtn.disabled) return;
     const { year, month } = getSelectedFilter();
+    const part = getSelectedPart();
+    const partLabel = part === '국내' ? '국내파트' : '해외파트';
+
     const msg = year && month
-      ? `${year}년 ${month}월 데이터를 시트에 반영합니다. 계속하시겠습니까?`
-      : '보드의 디자이너 배정/완료 상태를 시트에 반영합니다. 계속하시겠습니까?';
+      ? `${partLabel} ${year}년 ${month}월 데이터를 시트에 반영합니다. 계속하시겠습니까?`
+      : `${partLabel} 전체 데이터를 시트에 반영합니다. 계속하시겠습니까?`;
     if (!confirm(msg)) return;
+
     pushBtn.disabled = true;
     pushBtn.textContent = '내보내기 중...';
     try {
-      const result = await SyncAPI.push(year, month);
+      const result = await SyncAPI.push(year, month, part);
       alert(result.message);
     } catch (err) {
       alert('내보내기 실패: ' + err.message);

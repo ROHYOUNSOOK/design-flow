@@ -24,6 +24,7 @@ window.currentUser = null;
   if (user.role === '관리자') {
     document.getElementById('addTaskBtn').style.display = '';
     document.getElementById('manageUsersBtn').style.display = '';
+    document.getElementById('partSelect').style.display = '';
     document.getElementById('syncPullBtn').style.display = '';
     document.getElementById('syncPushBtn').style.display = '';
     initSync();

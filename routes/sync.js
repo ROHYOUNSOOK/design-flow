@@ -4,13 +4,17 @@ const store = require('../lib/store');
 const sheets = require('../lib/sheets');
 const { requireRole, requireLogin } = require('../middleware/auth');
 
-// 시트 → 보드 동기화 (Pull) - year/month 필터 지원
+// 시트 → 보드 동기화 (Pull) - part(국내/해외) + year/month 필터
 router.post('/pull', requireRole('관리자'), async (req, res) => {
   try {
-    const { year, month } = req.body;
+    const { year, month, part } = req.body;
 
-    const csvRows = await sheets.fetchSheetCSV();
-    let sheetTasks = sheets.mapSheetRowsToTasks(csvRows);
+    if (!part || !['국내', '해외'].includes(part)) {
+      return res.status(400).json({ error: '파트(국내/해외)를 선택해주세요.' });
+    }
+
+    const csvRows = await sheets.fetchSheetCSV(part);
+    let sheetTasks = sheets.mapSheetRowsToTasks(csvRows, part);
 
     // year/month 필터링
     if (year && month) {
@@ -26,7 +30,6 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
     let created = 0;
     let updated = 0;
 
-    // 보드 유저 목록 (디자이너 이름 → ID 매핑)
     const users = await store.getUsers();
     const userByName = {};
     for (const u of users) {
@@ -34,7 +37,7 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
     }
 
     for (const st of sheetTasks) {
-      const existing = await store.getTaskBySheetRow(st.sheetRow);
+      const existing = await store.getTaskBySheetRow(st.sheetRow, part);
 
       let assigneeId = null;
       let assigneeName = st.assigneeName;
@@ -46,8 +49,12 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
         await store.updateTask(existing.id, {
           title: st.title,
           description: st.description,
+          status: st.status,
+          assigneeId,
+          assigneeName,
           dueDate: st.dueDate,
           requestDate: st.requestDate,
+          part,
         });
         updated++;
       } else {
@@ -61,14 +68,16 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
           dueDate: st.dueDate,
           sheetRow: st.sheetRow,
           requestDate: st.requestDate,
+          part,
         });
         created++;
       }
     }
 
+    const partLabel = part === '국내' ? '국내파트' : '해외파트';
     res.json({
       ok: true,
-      message: `동기화 완료: ${created}개 생성, ${updated}개 업데이트`,
+      message: `${partLabel} 동기화 완료: ${created}개 생성, ${updated}개 업데이트`,
       created,
       updated,
     });
@@ -81,23 +90,27 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
 // 보드 → 시트 동기화 (Push)
 router.post('/push', requireRole('관리자'), async (req, res) => {
   try {
-    const { year, month } = req.body;
-    let tasks;
+    const { year, month, part } = req.body;
 
+    if (!part || !['국내', '해외'].includes(part)) {
+      return res.status(400).json({ error: '파트(국내/해외)를 선택해주세요.' });
+    }
+
+    let tasks;
     if (year && month) {
       tasks = await store.getTasksByMonth(parseInt(year), parseInt(month));
     } else {
       tasks = await store.getTasks();
     }
 
-    const sheetTasks = tasks.filter(t => t.sheetRow);
+    const sheetTasks = tasks.filter(t => t.sheetRow && t.part === part);
 
     let pushed = 0;
     let errors = 0;
 
     for (const task of sheetTasks) {
       try {
-        await sheets.pushToSheet(task.sheetRow, {
+        await sheets.pushToSheet(task.sheetRow, part, {
           designerName: task.assigneeName || '',
           completed: task.status === '완료',
         });
@@ -108,9 +121,10 @@ router.post('/push', requireRole('관리자'), async (req, res) => {
       }
     }
 
+    const partLabel = part === '국내' ? '국내파트' : '해외파트';
     res.json({
       ok: true,
-      message: `시트 업데이트 완료: ${pushed}개 반영, ${errors}개 실패`,
+      message: `${partLabel} 시트 업데이트 완료: ${pushed}개 반영, ${errors}개 실패`,
       pushed,
       errors,
     });
