@@ -88,17 +88,25 @@ function createCardElement(task, currentUser, users) {
 
     try {
       if (action === 'start') {
+        UndoManager.save(id, '시작하기');
         await API.startTask(id);
-        window.loadBoard();
+        await reloadCurrentBoard();
+        UndoManager.show(`${task.title} → 진행중`);
       } else if (action === 'complete') {
+        UndoManager.save(id, '완료하기');
         await API.completeTask(id);
-        window.loadBoard();
+        await reloadCurrentBoard();
+        UndoManager.show(`${task.title} → 완료`);
       } else if (action === 'edit') {
         window.openEditModal(id);
       } else if (action === 'delete') {
         if (confirm('이 업무를 삭제하시겠습니까?')) {
+          UndoManager.save(id, '삭제');
+          const saved = UndoManager._last;
+          if (saved) saved.snapshot._deleted = true;
           await API.deleteTask(id);
-          window.loadBoard();
+          await reloadCurrentBoard();
+          UndoManager.show(`${task.title} 삭제됨`);
         }
       }
     } catch (err) {

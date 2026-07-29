@@ -39,10 +39,15 @@ function initDragDrop() {
 
       const taskId = e.dataTransfer.getData('text/plain');
       const newStatus = col.dataset.status;
+      const task = allTasks.find(t => t.id === taskId);
+      if (task && task.status === newStatus) return;
+
+      UndoManager.save(taskId, `"${task ? task.title : ''}" 상태 변경`);
 
       try {
         await API.updateTaskStatus(taskId, newStatus);
-        window.loadBoard();
+        await reloadCurrentBoard();
+        UndoManager.show(`${task.title} → ${newStatus}`);
       } catch (err) {
         alert(err.message);
       }
