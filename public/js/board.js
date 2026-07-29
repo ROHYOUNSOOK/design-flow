@@ -58,22 +58,34 @@ function renderBoard(tasks, users) {
       cardList.dataset.status = status;
       cardList.dataset.part = part;
 
-      const INITIAL_SHOW = 5;
+      const PAGE_SIZE = 5;
+      let visibleCount = PAGE_SIZE;
       filtered.forEach((task, idx) => {
         const card = createCardElement(task, currentUser, users);
-        if (idx >= INITIAL_SHOW) card.classList.add('card-hidden');
+        if (idx >= PAGE_SIZE) card.classList.add('card-hidden');
         cardList.appendChild(card);
       });
 
       col.appendChild(cardList);
 
-      if (filtered.length > INITIAL_SHOW) {
+      if (filtered.length > PAGE_SIZE) {
         const moreBtn = document.createElement('button');
         moreBtn.className = 'btn-show-more';
-        moreBtn.textContent = `더보기 (${filtered.length - INITIAL_SHOW}건)`;
+        const remaining = filtered.length - PAGE_SIZE;
+        moreBtn.textContent = `더보기 (${remaining}건)`;
         moreBtn.addEventListener('click', () => {
-          cardList.querySelectorAll('.card-hidden').forEach(c => c.classList.remove('card-hidden'));
-          moreBtn.remove();
+          const hiddenCards = cardList.querySelectorAll('.card-hidden');
+          const nextBatch = Math.min(PAGE_SIZE, hiddenCards.length);
+          for (let i = 0; i < nextBatch; i++) {
+            hiddenCards[i].classList.remove('card-hidden');
+          }
+          visibleCount += nextBatch;
+          const newRemaining = filtered.length - visibleCount;
+          if (newRemaining <= 0) {
+            moreBtn.remove();
+          } else {
+            moreBtn.textContent = `더보기 (${newRemaining}건)`;
+          }
         });
         col.appendChild(moreBtn);
       }
