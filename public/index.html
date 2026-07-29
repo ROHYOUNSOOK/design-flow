@@ -11,9 +11,12 @@
   <div class="login-container">
     <div class="login-card">
       <h1>디자이너 업무 플로어</h1>
-      <p>@daplan.com Google 계정으로 로그인하세요</p>
-      <div id="googleLoginBtn" style="display:flex;justify-content:center;margin-top:12px;"></div>
-      <div id="loginError" style="display:none;color:#e74c3c;font-size:13px;text-align:center;margin-top:16px;"></div>
+      <p>@daplan.com 이메일로 로그인하세요</p>
+      <form id="loginForm" class="login-form">
+        <input type="email" id="emailInput" class="login-input" placeholder="name@daplan.com" required>
+        <button type="submit" class="login-submit">로그인</button>
+      </form>
+      <div id="loginError" style="display:none;color:#e74c3c;font-size:13px;text-align:center;margin-top:12px;"></div>
     </div>
   </div>
 
