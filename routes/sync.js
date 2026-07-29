@@ -57,6 +57,7 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
           title: st.title,
           description: st.description,
           status: st.status,
+          progress: st.progress,
           assigneeId,
           assigneeName,
           dueDate: st.dueDate,
