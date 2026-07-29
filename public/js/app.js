@@ -17,10 +17,16 @@ window.currentUser = null;
   document.getElementById('headerName').textContent = user.name;
   document.getElementById('headerRole').textContent = user.role;
 
-  // 관리자: 새 업무 + 팀원 관리 버튼 표시
+  // 필터 초기화 (모든 유저 사용 가능)
+  initFilter();
+
+  // 관리자: 새 업무 + 팀원 관리 + 동기화 버튼 표시
   if (user.role === '관리자') {
     document.getElementById('addTaskBtn').style.display = '';
     document.getElementById('manageUsersBtn').style.display = '';
+    document.getElementById('syncPullBtn').style.display = '';
+    document.getElementById('syncPushBtn').style.display = '';
+    initSync();
   }
 
   // 로그아웃
@@ -33,7 +39,7 @@ window.currentUser = null;
   await loadBoard();
 
   // 알림 폴링 시작 (팀장, 부팀장만)
-  if (user.role === '팀장' || user.role === '부팀장') {
+  if (user.role === '파트장' || user.role === '부팀장') {
     startPolling();
   } else {
     // 다른 역할은 배지 숨김
