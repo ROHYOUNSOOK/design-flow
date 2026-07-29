@@ -37,10 +37,11 @@ function createCardElement(task, currentUser, users) {
   html += `
     <div class="card-title">${escapeHtml(task.title)}</div>
     ${task.description ? `<div class="card-desc">${escapeHtml(task.description)}</div>` : ''}
+    ${task.status !== '완료' ? `
     <div class="progress-bar-container">
       <div class="progress-bar ${barClass}" style="width:${task.progress}%"></div>
     </div>
-    <div class="progress-text">${task.progress}%</div>
+    <div class="progress-text">${task.progress}%</div>` : ''}
     <div class="card-footer">
       <div class="card-assignee">
         <div class="mini-avatar" style="background:${avatarColor}">${avatarInitial}</div>

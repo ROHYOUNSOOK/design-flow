@@ -25,6 +25,7 @@
       </div>
       <button class="btn-add-task" id="addTaskBtn" style="display:none;">+ 새 업무</button>
       <button class="btn-manage-users" id="manageUsersBtn" style="display:none;">팀원 관리</button>
+      <button class="btn-manage-users" id="memberTaskBtn" style="display:none;">팀원 업무관리</button>
       <select class="filter-select" id="partSelect" style="display:none;">
         <option value="국내">국내파트</option>
         <option value="해외">해외파트</option>
@@ -145,6 +146,19 @@
     </div>
   </div>
 
+  <!-- 팀원 업무관리 모달 -->
+  <div class="modal-overlay" id="memberTaskModal">
+    <div class="modal" style="max-width:700px;">
+      <div class="modal-header">
+        <h2>팀원 업무관리</h2>
+        <button class="modal-close" id="memberTaskModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="memberTaskContent"></div>
+      </div>
+    </div>
+  </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/card.js"></script>
   <script src="/js/board.js"></script>
@@ -152,6 +166,7 @@
   <script src="/js/modal.js"></script>
   <script src="/js/notification.js"></script>
   <script src="/js/users.js"></script>
+  <script src="/js/memberTask.js"></script>
   <script src="/js/sync.js"></script>
   <script src="/js/app.js"></script>
 </body>

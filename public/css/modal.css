@@ -167,3 +167,59 @@
 .btn-submit:hover {
   opacity: 0.85;
 }
+
+/* 팀원 업무관리 테이블 */
+.member-task-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.member-task-table th,
+.member-task-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.member-task-table th {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(55, 53, 47, 0.03);
+}
+
+.member-task-table td:first-child,
+.member-task-table th:first-child {
+  text-align: left;
+}
+
+.member-name {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.member-total-row {
+  background: rgba(55, 53, 47, 0.03);
+  border-top: 2px solid var(--border-strong);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-progress {
+  background: var(--col-progress);
+  color: var(--tag-blue-text);
+}
+
+.badge-complete {
+  background: var(--col-done);
+  color: var(--tag-green-text);
+}
