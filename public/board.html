@@ -16,6 +16,22 @@
     <div class="header-left">
       <h1>업무 플로어</h1>
     </div>
+    <div class="header-center">
+      <div class="filter-group" id="filterGroup">
+        <select class="filter-select" id="filterYear"></select>
+        <select class="filter-select" id="filterMonth"></select>
+        <button class="btn-filter" id="filterBtn">조회</button>
+        <button class="btn-filter btn-filter-reset" id="filterResetBtn">전체</button>
+      </div>
+      <button class="btn-add-task" id="addTaskBtn" style="display:none;">+ 새 업무</button>
+      <button class="btn-manage-users" id="manageUsersBtn" style="display:none;">팀원 관리</button>
+      <select class="filter-select" id="partSelect" style="display:none;">
+        <option value="국내">국내파트</option>
+        <option value="해외">해외파트</option>
+      </select>
+      <button class="btn-sync" id="syncPullBtn" style="display:none;">시트 가져오기</button>
+      <button class="btn-sync btn-sync-push" id="syncPushBtn" style="display:none;">시트 내보내기</button>
+    </div>
     <div class="header-right">
       <button class="notification-bell" id="bellBtn">
         🔔
@@ -41,23 +57,6 @@
 
   <!-- 메인 -->
   <main class="main">
-    <div class="board-header">
-      <h2>업무 보드</h2>
-      <div class="filter-group" id="filterGroup">
-        <select class="filter-select" id="filterYear"></select>
-        <select class="filter-select" id="filterMonth"></select>
-        <button class="btn-filter" id="filterBtn">조회</button>
-        <button class="btn-filter btn-filter-reset" id="filterResetBtn">전체</button>
-      </div>
-      <button class="btn-add-task" id="addTaskBtn" style="display:none;">+ 새 업무</button>
-      <button class="btn-manage-users" id="manageUsersBtn" style="display:none;">팀원 관리</button>
-      <select class="filter-select" id="partSelect" style="display:none;">
-        <option value="국내">국내파트</option>
-        <option value="해외">해외파트</option>
-      </select>
-      <button class="btn-sync" id="syncPullBtn" style="display:none;">시트 가져오기</button>
-      <button class="btn-sync btn-sync-push" id="syncPushBtn" style="display:none;">시트 내보내기</button>
-    </div>
 
     <div class="board" id="board">
       <!-- JS로 동적 생성 -->
