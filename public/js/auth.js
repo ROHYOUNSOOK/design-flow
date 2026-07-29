@@ -6,27 +6,60 @@
     return;
   } catch {}
 
-  const userList = document.getElementById('userList');
-  const users = await API.getUsers();
+  const errorEl = document.getElementById('loginError');
 
-  users.forEach(user => {
-    const btn = document.createElement('button');
-    btn.className = 'user-btn';
-    btn.innerHTML = `
-      <div class="user-avatar" style="background:${user.avatar}">${user.name[0]}</div>
-      <div class="user-info">
-        <span class="name">${user.name}</span>
-        <span class="role">${user.role}</span>
-      </div>
-    `;
-    btn.addEventListener('click', async () => {
-      try {
-        await API.login(user.id);
-        location.href = '/board.html';
-      } catch (e) {
-        alert(e.message);
-      }
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  // Google Client ID 가져오기
+  let clientId;
+  try {
+    const config = await API.getAuthConfig();
+    clientId = config.googleClientId;
+  } catch {
+    showError('서버 설정을 불러올 수 없습니다.');
+    return;
+  }
+
+  if (!clientId) {
+    showError('Google 로그인이 설정되지 않았습니다.');
+    return;
+  }
+
+  // Google Identity Services 로드
+  const script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.async = true;
+  script.onload = function() {
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: handleCredentialResponse,
+      auto_select: false,
     });
-    userList.appendChild(btn);
-  });
+
+    google.accounts.id.renderButton(
+      document.getElementById('googleLoginBtn'),
+      {
+        theme: 'outline',
+        size: 'large',
+        width: 300,
+        text: 'signin_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
+      }
+    );
+  };
+  document.head.appendChild(script);
+
+  async function handleCredentialResponse(response) {
+    errorEl.style.display = 'none';
+    try {
+      await API.googleLogin(response.credential);
+      location.href = '/board.html';
+    } catch (e) {
+      showError(e.message);
+    }
+  }
 })();

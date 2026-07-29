@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
-const { requireRole } = require('../middleware/auth');
+const { requireLogin, requireRole } = require('../middleware/auth');
 
-// 사용자 목록 조회
-router.get('/', async (req, res) => {
+// 사용자 목록 조회 (로그인 필요)
+router.get('/', requireLogin, async (req, res) => {
   try {
     const users = await store.getUsers();
     res.json(users);

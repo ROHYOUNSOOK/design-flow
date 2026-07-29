@@ -13,7 +13,8 @@ const API = {
   },
 
   // Auth
-  login(userId) { return this.request('POST', '/auth/login', { userId }); },
+  googleLogin(credential) { return this.request('POST', '/auth/google', { credential }); },
+  getAuthConfig() { return this.request('GET', '/auth/config'); },
   logout() { return this.request('POST', '/auth/logout'); },
   me() { return this.request('GET', '/auth/me'); },
 
