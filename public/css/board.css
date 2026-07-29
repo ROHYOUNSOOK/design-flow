@@ -335,9 +335,10 @@
 }
 
 .btn-show-more {
-  width: 100%;
+  width: calc(100% - 12px);
+  margin: 0 6px;
   padding: 8px;
-  background: rgba(55, 53, 47, 0.04);
+  background: var(--surface);
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-sm);
   font-size: 12px;
@@ -345,6 +346,10 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: background 0.1s;
+  position: sticky;
+  bottom: 8px;
+  z-index: 5;
+  box-shadow: 0 -4px 8px rgba(255,255,255,0.8);
 }
 
 .btn-show-more:hover {

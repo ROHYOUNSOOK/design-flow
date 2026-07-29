@@ -65,6 +65,8 @@ function renderBoard(tasks, users) {
         cardList.appendChild(card);
       });
 
+      col.appendChild(cardList);
+
       if (filtered.length > INITIAL_SHOW) {
         const moreBtn = document.createElement('button');
         moreBtn.className = 'btn-show-more';
@@ -73,10 +75,9 @@ function renderBoard(tasks, users) {
           cardList.querySelectorAll('.card-hidden').forEach(c => c.classList.remove('card-hidden'));
           moreBtn.remove();
         });
-        cardList.appendChild(moreBtn);
+        col.appendChild(moreBtn);
       }
 
-      col.appendChild(cardList);
       columnsWrap.appendChild(col);
     });
 
