@@ -22,7 +22,7 @@
         <span class="notification-badge hidden" id="notifBadge">0</span>
       </button>
       <div class="header-user">
-        <div class="user-avatar" id="headerAvatar" style="width:32px;height:32px;font-size:13px;"></div>
+        <div class="user-avatar" id="headerAvatar" style="width:24px;height:24px;font-size:11px;"></div>
         <span id="headerName"></span>
         <span class="role-badge" id="headerRole"></span>
       </div>
@@ -43,8 +43,16 @@
   <main class="main">
     <div class="board-header">
       <h2>업무 보드</h2>
+      <div class="filter-group" id="filterGroup">
+        <select class="filter-select" id="filterYear"></select>
+        <select class="filter-select" id="filterMonth"></select>
+        <button class="btn-filter" id="filterBtn">조회</button>
+        <button class="btn-filter btn-filter-reset" id="filterResetBtn">전체</button>
+      </div>
       <button class="btn-add-task" id="addTaskBtn" style="display:none;">+ 새 업무</button>
-      <button class="btn-manage-users" id="manageUsersBtn" style="display:none;">👥 팀원 관리</button>
+      <button class="btn-manage-users" id="manageUsersBtn" style="display:none;">팀원 관리</button>
+      <button class="btn-sync" id="syncPullBtn" style="display:none;">시트 가져오기</button>
+      <button class="btn-sync btn-sync-push" id="syncPushBtn" style="display:none;">시트 내보내기</button>
     </div>
 
     <div class="board" id="board">
@@ -130,7 +138,7 @@
             <select id="userRoleInput" class="user-input">
               <option value="팀원">팀원</option>
               <option value="관리자">관리자</option>
-              <option value="팀장">팀장</option>
+              <option value="파트장">파트장</option>
               <option value="부팀장">부팀장</option>
             </select>
             <input type="color" id="userAvatarInput" value="#6C5CE7" class="user-color-input">
@@ -154,6 +162,7 @@
   <script src="/js/modal.js"></script>
   <script src="/js/notification.js"></script>
   <script src="/js/users.js"></script>
+  <script src="/js/sync.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>

@@ -46,7 +46,7 @@ function createCardElement(task, currentUser, users) {
         <div class="mini-avatar" style="background:${avatarColor}">${avatarInitial}</div>
         <span>${task.assigneeName || '미배정'}</span>
       </div>
-      ${task.dueDate ? `<div class="card-due ${dueClass}">📅 ${dueDateStr}</div>` : ''}
+      ${task.dueDate ? `<div class="card-due ${dueClass}">${dueDateStr}</div>` : ''}
     </div>
   `;
 

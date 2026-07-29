@@ -2,102 +2,108 @@
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 12px;
   min-height: calc(100vh - var(--header-height) - 120px);
 }
 
 .column {
-  background: var(--bg);
+  background: #f7f6f3;
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 0;
   min-height: 400px;
-  transition: background 0.2s;
+  transition: background 0.15s;
 }
 
 .column.drag-over {
-  background: #e8e5ff;
+  background: var(--primary-light);
 }
 
 .column-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--border);
+  padding: 10px 12px;
+  position: sticky;
+  top: var(--header-height);
+  z-index: 10;
 }
 
 .column-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 700;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .column-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
-.column[data-status="대기"] .column-dot { background: #b2bec3; }
-.column[data-status="진행중"] .column-dot { background: var(--col-progress); }
-.column[data-status="완료"] .column-dot { background: var(--col-done); }
+.column[data-status="대기"] .column-dot { background: #9b9a97; }
+.column[data-status="진행중"] .column-dot { background: #2eaadc; }
+.column[data-status="완료"] .column-dot { background: #0f7b6c; }
 
 .column-count {
-  background: var(--border);
-  padding: 2px 10px;
-  border-radius: 20px;
+  background: rgba(55, 53, 47, 0.06);
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-secondary);
+  line-height: 20px;
 }
 
 .card-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 100px;
+  gap: 6px;
+  padding: 0 6px 6px;
+  min-height: 80px;
 }
 
 /* 카드 스타일 */
 .card {
   background: var(--surface);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   cursor: grab;
-  transition: transform 0.15s, box-shadow 0.15s;
-  border-left: 4px solid transparent;
+  transition: background 0.1s;
+  border: 1px solid var(--border);
   position: relative;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--surface-hover);
 }
 
 .card.dragging {
-  opacity: 0.5;
-  transform: rotate(2deg);
+  opacity: 0.4;
 }
 
-.card[data-priority="high"] { border-left-color: var(--priority-high); }
-.card[data-priority="mid"] { border-left-color: var(--priority-mid); }
-.card[data-priority="low"] { border-left-color: var(--priority-low); }
+.card[data-priority="high"] { border-left: 3px solid var(--priority-high); }
+.card[data-priority="mid"] { border-left: 3px solid var(--priority-mid); }
+.card[data-priority="low"] { border-left: 3px solid var(--priority-low); }
 
 .card-title {
   font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  padding-right: 24px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  padding-right: 20px;
+  color: var(--text);
+  line-height: 1.4;
 }
 
 .card-desc {
   font-size: 12px;
   color: var(--text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -107,27 +113,26 @@
 
 /* 진행도 바 */
 .progress-bar-container {
-  background: var(--border);
-  border-radius: 6px;
-  height: 8px;
-  margin-bottom: 12px;
+  background: rgba(55, 53, 47, 0.06);
+  border-radius: 3px;
+  height: 4px;
+  margin-bottom: 8px;
   overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  border-radius: 6px;
+  border-radius: 3px;
   transition: width 0.3s ease;
   background: var(--primary);
 }
 
-.progress-bar.high { background: var(--priority-high); }
-.progress-bar.done { background: var(--col-done); }
+.progress-bar.done { background: #0f7b6c; }
 
 .progress-text {
   font-size: 11px;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
+  color: var(--text-light);
+  margin-bottom: 6px;
   text-align: right;
 }
 
@@ -143,25 +148,26 @@
 .card-assignee {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .card-assignee .mini-avatar {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 600;
 }
 
 .card-due {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  font-size: 11px;
 }
 
 .card-due.overdue {
@@ -171,91 +177,112 @@
 
 /* 카드 액션 버튼 */
 .card-actions {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .btn-card-action {
   flex: 1;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 600;
-  transition: opacity 0.2s;
-}
-
-.btn-card-action:hover {
-  opacity: 0.85;
+  font-weight: 500;
+  transition: background 0.1s;
 }
 
 .btn-start {
   background: var(--col-progress);
-  color: #fff;
+  color: var(--tag-blue-text);
+}
+
+.btn-start:hover {
+  opacity: 0.8;
 }
 
 .btn-complete {
   background: var(--col-done);
-  color: #1a1a2e;
+  color: var(--tag-green-text);
+}
+
+.btn-complete:hover {
+  opacity: 0.8;
 }
 
 .btn-edit {
-  background: var(--bg);
+  background: var(--surface-hover);
   color: var(--text-secondary);
 }
 
+.btn-edit:hover {
+  background: var(--tag-gray);
+}
+
 .btn-delete {
-  background: #ffeaea;
-  color: var(--priority-high);
+  background: var(--tag-red);
+  color: var(--tag-red-text);
+}
+
+.btn-delete:hover {
+  opacity: 0.8;
 }
 
 /* 진행도 슬라이더 */
 .progress-slider-container {
-  margin-top: 8px;
+  margin-top: 6px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .progress-slider {
   flex: 1;
-  height: 6px;
+  height: 4px;
   -webkit-appearance: none;
   appearance: none;
-  background: var(--border);
-  border-radius: 3px;
+  background: rgba(55, 53, 47, 0.08);
+  border-radius: 2px;
   outline: none;
 }
 
 .progress-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--primary);
   cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .progress-slider-value {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--primary);
-  min-width: 35px;
+  min-width: 30px;
   text-align: right;
 }
 
 /* 카드 메뉴 버튼 (관리자용) */
 .card-menu-btn {
   position: absolute;
-  top: 12px;
-  right: 10px;
+  top: 8px;
+  right: 6px;
   background: none;
-  font-size: 16px;
-  color: var(--text-secondary);
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 14px;
+  color: var(--text-light);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.card:hover .card-menu-btn {
+  opacity: 1;
 }
 
 .card-menu-btn:hover {
-  background: var(--bg);
+  background: rgba(55, 53, 47, 0.08);
+  color: var(--text);
 }
