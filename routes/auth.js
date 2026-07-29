@@ -4,6 +4,7 @@ const { getUserByEmail, createUser } = require('../lib/store');
 const { createToken, setTokenCookie, clearTokenCookie, getUserFromRequest } = require('../lib/auth');
 
 const ALLOWED_DOMAIN = 'daplan.com';
+const ADMIN_EMAIL = 'admin@daplan.com';
 
 const AVATAR_COLORS = ['#6C5CE7', '#00B894', '#FDCB6E', '#E17055', '#0984E3', '#D63031', '#00CEC9', '#E84393', '#636E72', '#2D3436'];
 function randomAvatar() {
@@ -27,9 +28,10 @@ router.post('/login', async (req, res) => {
 
     if (!user) {
       const name = email.split('@')[0];
+      const role = email.toLowerCase() === ADMIN_EMAIL ? '관리자' : '팀원';
       user = await createUser({
         name,
-        role: '팀원',
+        role,
         avatar: randomAvatar(),
         email: email.toLowerCase(),
       });
