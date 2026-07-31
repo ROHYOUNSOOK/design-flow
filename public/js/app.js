@@ -11,6 +11,18 @@ window.currentUser = null;
 
   const user = window.currentUser;
 
+  // 승인 대기 상태 확인
+  if (user.approved === false) {
+    document.querySelector('.header').style.display = 'none';
+    document.querySelector('.main').style.display = 'none';
+    var pending = document.getElementById('pendingApproval');
+    if (pending) pending.style.display = 'flex';
+    document.getElementById('pendingLogoutBtn').addEventListener('click', () => {
+      API.logout().finally(() => { location.href = '/'; });
+    });
+    return;
+  }
+
   // 헤더 유저 정보
   document.getElementById('headerAvatar').style.background = user.avatar;
   document.getElementById('headerAvatar').textContent = user.name[0];

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUserByEmail, createUser, updateUser } = require('../lib/store');
+const { getUserByEmail, getUserById, createUser, updateUser } = require('../lib/store');
 const { createToken, setTokenCookie, clearTokenCookie, getUserFromRequest } = require('../lib/auth');
 
 const ALLOWED_DOMAIN = 'daplan.com';
@@ -27,13 +27,15 @@ router.post('/login', async (req, res) => {
     let user = await getUserByEmail(email.toLowerCase());
 
     if (!user) {
+      const isAdmin = email.toLowerCase() === ADMIN_EMAIL;
       const name = email.split('@')[0];
-      const role = email.toLowerCase() === ADMIN_EMAIL ? '관리자' : '팀원';
+      const role = isAdmin ? '관리자' : '팀원';
       user = await createUser({
         name,
         role,
         avatar: randomAvatar(),
         email: email.toLowerCase(),
+        approved: isAdmin,
       });
     } else if (email.toLowerCase() === ADMIN_EMAIL && user.role !== '관리자') {
       user = await updateUser(user.id, { role: '관리자' });
@@ -53,11 +55,14 @@ router.post('/logout', (req, res) => {
   res.json({ ok: true });
 });
 
-router.get('/me', (req, res) => {
-  const user = getUserFromRequest(req);
-  if (!user) {
+router.get('/me', async (req, res) => {
+  const tokenUser = getUserFromRequest(req);
+  if (!tokenUser) {
     return res.status(401).json({ error: '로그인이 필요합니다.' });
   }
+  // DB에서 최신 approved 상태를 가져옴
+  const dbUser = await getUserById(tokenUser.id);
+  const user = { ...tokenUser, approved: dbUser ? dbUser.approved : tokenUser.approved };
   res.json({ user });
 });
 

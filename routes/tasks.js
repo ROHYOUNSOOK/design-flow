@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
-const { requireLogin, requireRole } = require('../middleware/auth');
+const { requireLogin, requireRole, requireApproved } = require('../middleware/auth');
 
-// 업무 목록 조회
-router.get('/', requireLogin, async (req, res) => {
+// 업무 목록 조회 (팀원은 본인 업무만)
+router.get('/', requireLogin, requireApproved, async (req, res) => {
   try {
-    const tasks = await store.getTasks();
+    let tasks = await store.getTasks();
+    if (req.user.role === '팀원') {
+      tasks = tasks.filter(t =>
+        t.assigneeId === req.user.id || t.assigneeName === req.user.name
+      );
+    }
     res.json(tasks);
   } catch (err) {
     console.error('Get tasks error:', err);
@@ -181,7 +186,7 @@ router.patch('/:id/progress', requireRole('관리자', '팀원'), async (req, re
 });
 
 // 드래그앤드롭 상태 변경
-router.patch('/:id/status', requireLogin, async (req, res) => {
+router.patch('/:id/status', requireLogin, requireApproved, async (req, res) => {
   try {
     const user = req.user;
     const task = await store.getTaskById(req.params.id);

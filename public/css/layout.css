@@ -298,6 +298,11 @@
   font-size: 13px;
 }
 
+.user-email-cell {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
 .user-table th {
   font-weight: 500;
   color: var(--text-secondary);
@@ -330,4 +335,102 @@
 .btn-user-edit:hover,
 .btn-user-delete:hover {
   opacity: 0.8;
+}
+
+/* 승인 대기 화면 */
+.pending-approval {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f7f6f3;
+}
+
+.pending-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 380px;
+  width: 100%;
+}
+
+.pending-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.pending-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.pending-card p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.btn-pending-back {
+  padding: 10px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-pending-back:hover {
+  opacity: 0.85;
+}
+
+/* 가입/승인 상태 배지 */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-joined {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-not-joined {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-neutral {
+  background: var(--surface-hover);
+  color: var(--text-secondary);
+}
+
+.btn-user-approve {
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  background: var(--primary);
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.btn-user-approve:hover {
+  opacity: 0.85;
 }

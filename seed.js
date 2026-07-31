@@ -11,7 +11,8 @@ async function seed() {
       name VARCHAR(50) NOT NULL,
       role VARCHAR(20) NOT NULL,
       avatar VARCHAR(10) NOT NULL,
-      email VARCHAR(100) UNIQUE
+      email VARCHAR(100) UNIQUE,
+      approved BOOLEAN DEFAULT TRUE
     )
   `;
 

@@ -33,16 +33,43 @@
       const users = await API.getUsers();
       tbody.innerHTML = '';
       users.forEach(function (u) {
+        var hasEmail = !!u.email;
+        var isApproved = u.approved !== false;
+        var signupBadge = hasEmail
+          ? '<span class="status-badge status-joined">가입</span>'
+          : '<span class="status-badge status-not-joined">미가입</span>';
+        var approvalCell;
+        if (!hasEmail) {
+          approvalCell = '<span class="status-badge status-neutral">-</span>';
+        } else if (isApproved) {
+          approvalCell = '<span class="status-badge status-approved">승인됨</span>';
+        } else {
+          approvalCell = '<button class="btn-user-approve" data-id="' + u.id + '">승인</button>';
+        }
         var tr = document.createElement('tr');
         tr.innerHTML =
           '<td><div class="user-avatar" style="background:' + u.avatar + ';width:28px;height:28px;font-size:12px;">' + u.name[0] + '</div></td>' +
           '<td>' + u.name + '</td>' +
+          '<td class="user-email-cell">' + (u.email || '-') + '</td>' +
           '<td><span class="role-badge">' + u.role + '</span></td>' +
+          '<td>' + signupBadge + '</td>' +
+          '<td>' + approvalCell + '</td>' +
           '<td>' +
             '<button class="btn-user-edit" data-id="' + u.id + '">수정</button>' +
             '<button class="btn-user-delete" data-id="' + u.id + '">삭제</button>' +
           '</td>';
         tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('.btn-user-approve').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          try {
+            await API.approveUser(btn.dataset.id);
+            renderUserList();
+          } catch (err) {
+            alert(err.message);
+          }
+        });
       });
 
       tbody.querySelectorAll('.btn-user-edit').forEach(function (btn) {

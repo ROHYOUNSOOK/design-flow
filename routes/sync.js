@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
 const sheets = require('../lib/sheets');
-const { requireRole, requireLogin } = require('../middleware/auth');
+const { requireRole, requireLogin, requireApproved } = require('../middleware/auth');
 
 // 시트 → 보드 동기화 (Pull) - 증분 동기화 지원
 router.post('/pull', requireRole('관리자'), async (req, res) => {
@@ -36,11 +36,35 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
 
     let created = 0;
     let updated = 0;
+    let usersCreated = 0;
 
     const users = await store.getUsers();
     const userByName = {};
     for (const u of users) {
       userByName[u.name] = u;
+    }
+
+    // P열(디자이너)에 있는 이름 중 미등록된 사람을 팀원으로 자동 생성
+    const avatarColors = [
+      '#6C5CE7', '#00B894', '#FDCB6E', '#E17055', '#0984E3',
+      '#D63031', '#00CEC9', '#E84393', '#2D3436', '#636E72',
+      '#A29BFE', '#55EFC4', '#FAB1A0', '#74B9FF', '#FD79A8',
+    ];
+    const designerNames = new Set();
+    for (const st of sheetTasks) {
+      if (st.assigneeName) designerNames.add(st.assigneeName);
+    }
+    for (const name of designerNames) {
+      if (!userByName[name]) {
+        const colorIdx = (Object.keys(userByName).length + usersCreated) % avatarColors.length;
+        const newUser = await store.createUser({
+          name,
+          role: '팀원',
+          avatar: avatarColors[colorIdx],
+        });
+        userByName[name] = newUser;
+        usersCreated++;
+      }
     }
 
     for (const st of sheetTasks) {
@@ -85,11 +109,13 @@ router.post('/pull', requireRole('관리자'), async (req, res) => {
 
     const partLabel = part === '국내' ? '국내파트' : '해외파트';
     const syncType = maxSheetRow !== null ? '증분' : '전체';
+    const userMsg = usersCreated > 0 ? `, 팀원 ${usersCreated}명 등록` : '';
     res.json({
       ok: true,
-      message: `${partLabel} ${syncType} 동기화 완료: ${created}개 생성, ${updated}개 업데이트`,
+      message: `${partLabel} ${syncType} 동기화 완료: ${created}개 생성, ${updated}개 업데이트${userMsg}`,
       created,
       updated,
+      usersCreated,
     });
   } catch (err) {
     console.error('Sync pull error:', err);
@@ -144,14 +170,19 @@ router.post('/push', requireRole('관리자'), async (req, res) => {
   }
 });
 
-// 월별 태스크 조회
-router.get('/tasks', requireLogin, async (req, res) => {
+// 월별 태스크 조회 (팀원은 본인 업무만)
+router.get('/tasks', requireLogin, requireApproved, async (req, res) => {
   try {
     const { year, month } = req.query;
     if (!year || !month) {
       return res.status(400).json({ error: 'year, month 파라미터가 필요합니다.' });
     }
-    const tasks = await store.getTasksByMonth(parseInt(year), parseInt(month));
+    let tasks = await store.getTasksByMonth(parseInt(year), parseInt(month));
+    if (req.user.role === '팀원') {
+      tasks = tasks.filter(t =>
+        t.assigneeId === req.user.id || t.assigneeName === req.user.name
+      );
+    }
     res.json(tasks);
   } catch (err) {
     console.error('Get monthly tasks error:', err);
